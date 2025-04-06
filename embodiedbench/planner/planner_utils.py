@@ -55,7 +55,18 @@ def fix_json(json_str):
     
     The regex uses a positive lookahead to stop matching when reaching the delimiter for the next key.
     """
-    # Pattern explanation:
+    # first fix common errors
+    json_str = json_str.replace("'",'"') 
+    json_str = json_str.replace('\"s ', "\'s ")
+    json_str = json_str.replace('\"re ', "\'re ")
+    json_str = json_str.replace('\"ll ', "\'ll ")
+    json_str = json_str.replace('\"t ', "\'t ")
+    json_str = json_str.replace('\"d ', "\'d ")
+    json_str = json_str.replace('\"m ', "\'m ")
+    json_str = json_str.replace('\"ve ', "\'ve ")
+    json_str = json_str.replace('```json', '').replace('```', '')
+
+    # Then fix some situations. Pattern explanation:
     # 1. ("reasoning_and_reflection"\s*:\s*") matches the key and the opening quote.
     # 2. (?P<value>.*?) lazily captures everything in a group named 'value'.
     # 3. (?=",\s*"language_plan") is a positive lookahead that stops matching before the closing quote

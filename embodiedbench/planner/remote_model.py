@@ -10,7 +10,8 @@ import lmdeploy
 from lmdeploy import pipeline, GenerationConfig, PytorchEngineConfig
 from embodiedbench.planner.planner_config.generation_guide import llm_generation_guide, vlm_generation_guide
 from embodiedbench.planner.planner_config.generation_guide_manip import llm_generation_guide_manip, vlm_generation_guide_manip
-from embodiedbench.planner.planner_utils import convert_format_2claude, convert_format_2gemini, ActionPlan_1, ActionPlan, ActionPlan_lang, ActionPlan_1_manip, ActionPlan_manip, ActionPlan_lang_manip
+from embodiedbench.planner.planner_utils import convert_format_2claude, convert_format_2gemini, ActionPlan_1, ActionPlan, ActionPlan_lang, \
+                                             ActionPlan_1_manip, ActionPlan_manip, ActionPlan_lang_manip, fix_json
 
 temperature = 0
 max_completion_tokens = 2048
@@ -125,6 +126,7 @@ class RemoteModel:
             )
         )
         out = response.text
+        out = fix_json(out)
         return out
 
     def _call_claude(self, message_history: list):
@@ -289,9 +291,7 @@ class RemoteModel:
 
         # easy to meet json errors
         out = response.choices[0].message.content
-        out = out.replace("'",'"')
-        out = out.replace('\"s ', "\'s ")
-        out = out.replace('```json', '').replace('```', '')
+        out = fix_json(out)
         return out
     
     def _call_intern38b(self, message_history):
@@ -321,9 +321,7 @@ class RemoteModel:
 
         # easy to meet json errors
         out = response.choices[0].message.content
-        out = out.replace("'",'"')
-        out = out.replace('\"s ', "\'s ")
-        out = out.replace('```json', '').replace('```', '')
+        out = fix_json(out)
         return out
 
 
