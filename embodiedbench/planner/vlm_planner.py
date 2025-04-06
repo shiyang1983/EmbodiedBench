@@ -184,15 +184,6 @@ class VLMPlanner():
         assert type(obs) == str # input image path
         out = self.model.respond(prompt, obs)
         # fix common generated json errors
-        out = out.replace("'",'"') 
-        out = out.replace('\"s ', "\'s ")
-        out = out.replace('\"re ', "\'re ")
-        out = out.replace('\"ll ', "\'ll ")
-        out = out.replace('\"t ', "\'t ")
-        out = out.replace('\"d ', "\'d ")
-        out = out.replace('\"m ', "\'m ")
-        out = out.replace('\"ve ', "\'ve ")
-        out = out.replace('```json', '').replace('```', '')
         out = fix_json(out)
         logger.debug(f"Model Output:\n{out}\n")
         action = self.json_to_action(out)
